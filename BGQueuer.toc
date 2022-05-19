@@ -17,6 +17,7 @@
 ## X-Category: Battlefield
 ## X-License: GPL 2
 ## X-Localizations:  enUS, zhCN, zhTW
+## X-Curse-Project-ID: 274066
 
 libs\LibStub\LibStub.lua
 libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
