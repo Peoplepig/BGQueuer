@@ -49,13 +49,12 @@ function BGQueuer:OnInitialize()
 	self.options = {
 		name = 'BGQueuer',
 		type = "group",
-		--handler =  BGQueuer, -- 這個 option table 使用的 obj 為何(如果有設這個屬性，getter 和 setter 指定的 function name 會從 obj 的 member function 找)
 		dialogInline  = true,
 		args = {
 			global_addon_enable = {
 				name = L["eanble"],
 				type = "toggle",
-				set = 	(function (info, val) -- function 只能寫在這邊，不然 lua runtime 會找不到 "self.db" ，不知道為什麼
+				set = 	(function (info, val)
 							self.db.global.global_addon_enable.enabled = val;
 							self.options.args.subgroupMajorOption.disabled = not val;
 							self.options.args.subgroupSoundOption.disabled = not val;
@@ -164,11 +163,11 @@ function BGQueuer:OnInitialize()
 				get = (function (info) return info.arg end),
 				set = (function () end),
 				order = 101,
-				dialogControl = "SFX-Info", -- -- https://www.wowinterface.com/downloads/info25658-AceGUI-3.0SFXWidgets.html
+				dialogControl = "SFX-Info",
 			},
 			split = {
 				type = "header",
-				name = L["About"], --L["Major option"],
+				name = L["About"],
 				width = "full",
 				order = 102,
 			},
@@ -235,12 +234,12 @@ function BGQueuer:OnInitialize()
 end
 
 function BGQueuer:OnEnable()
-	self:RegisterEvent("LFG_PROPOSAL_SHOW");				-- (排到隨機/pvp...等) Fired when a dungeon group was found and the dialog to accept or decline it appears.
-	self:RegisterEvent("READY_CHECK");						-- (隊長確認)Fired when a Ready Check is performed by the raid (or party) leader.
-	self:RegisterEvent("UPDATE_BATTLEFIELD_STATUS");		-- (戰場狀態改變)Fired whenever joining a queue, leaving a queue, battlefield to join is changed, when you can join a battlefield, or if somebody wins the battleground.
+	self:RegisterEvent("LFG_PROPOSAL_SHOW");
+	self:RegisterEvent("READY_CHECK");		
+	self:RegisterEvent("UPDATE_BATTLEFIELD_STATUS");
 	self:RegisterEvent("PET_BATTLE_QUEUE_PROPOSE_MATCH");
-	self:RegisterEvent("LFG_ROLE_CHECK_SHOW");				-- (角色確認) role check
-	self:RegisterEvent("START_TIMER");						-- a
+	self:RegisterEvent("LFG_ROLE_CHECK_SHOW");
+	self:RegisterEvent("START_TIMER");
 	self:RegisterEvent("PLAYER_DEAD")
 end
 
@@ -283,7 +282,6 @@ function BGQueuer:PLAYER_DEAD()
 	end
 end
 
--- cannot use "self" in C_Timer callback?
 function BGQueuer:BgTimerHandler()
 	if BGQueuer.db.global.battle_begin_notification.enabled then
 		BGQueuer:SondAlert()
@@ -291,46 +289,20 @@ function BGQueuer:BgTimerHandler()
 end
 
 function BGQueuer:START_TIMER(self, event, ...)
-	-- 現象一：發現totalTime 有時是nil, 不確定START_TIMER 每次都會回傳 totalTime 或是其它因素，解決方法：
-	-- 參考網站1: https://searchcode.com/codesearch/view/264730/
-	-- 現象二： 進隨機戰場後，瞬間發現觸發了兩次 totalTime 為 nil，但 (timeType, timeRemaing) 先後分別為 (114, 120), (120, 120) 的實例
-	-- 參考網站1  似乎是用  isFree 的方式來過濾掉第二次的觸發
-	-- 其它參考資料：
-	-- https://github.com/NamelessRogue/clockbuster/blob/master/ClockBuster.lua
-	-- https://ngabbs.com/read.php?tid=23887771&rand=436 
 	local timerType, timeRemaining, totalTime = ...;
-	--if (nil ~= totalTime) then
-	--	-- timerType規格：
-	--	-- TIMER_TYPE_CHALLENGE_MODE = 2. 
-	--	-- TIMER_TYPE_PVP = 1
-	--	dbgprint("timer detected抓到: timer type: " .. timerType .. ", remaining: " .. timeRemaining .. ", total: " .. totalTime)
-	--else
-	--	dbgprint("get nil totalTime: timer type: " .. timerType .. ", remaining: " .. timeRemaining)
-	--end
-
-	-- bz 9.0 後的 timer bug
-	-- https://ngabbs.com/read.php?tid=23887771&rand=436
-	-- https://us.forums.blizzard.com/en/wow/t/cpartyinfodocountdown-or-countdown-starts-on-screen-timer-with-additional-time-90-live-and-beta/690455
-	-- https://github.com/NamelessRogue/clockbuster
-	--if timeRemaining > totalTime then
-	--	DEFAULT_CHAT_FRAME:AddMessage("timer type: " .. timerType .. ", remaining: " .. timeRemaining .. ", total: " .. totalTime)
-	--	--FreeTimerTrackerTimer(b);
-	--end
 	
 	if (nil == totalTime) then
-		timeRemaining = timerType -- 不知為啥，event 有時不傳 timerType
+		timeRemaining = timerType
 	end
 
-	dbgprint("timer triggered! n秒後觸發" .. timeRemaining)
+	dbgprint("timer triggered! after n seconds" .. timeRemaining)
 	C_Timer.After(timeRemaining - 5, BGQueuer.BgTimerHandler)
 end
 
 function BGQueuer:UPDATE_BATTLEFIELD_STATUS()
 	for i = 1, GetMaxBattlefieldID() do
-		--local status, mapName, teamSize, registeredMatch, suspendedQueue, queueType, gameType, role, asGroup, shortDescription, longDescription = GetBattlefieldStatus(i)
 		local status = GetBattlefieldStatus(i)
 	
-		-- ready to enter battle, but "confirm" also fired when battle finished sometimes?
 		if (status == "confirm") then
 			dbgprint("bg confirm")
 			if self.db.global.proposal_show_notification.enabled then
