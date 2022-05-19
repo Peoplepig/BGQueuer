@@ -199,7 +199,7 @@ function BGQueuer:OnInitialize()
 			author = {
 				type = "input",
 				name = L["Author"],
-				desc = "人彘飛起來啊",
+				desc = L["peoplepigflyhigh"],
 				arg = GetAddOnMetadata("BGQueuer", "Author"),
 				get = (function (info) return info.arg end),
 				set = (function () end),

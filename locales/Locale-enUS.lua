@@ -19,4 +19,5 @@ L["Play sound"]											= true
 L["Your battlefield group has been ready"]				= true
 L["Author"]												= true
 L["Version"]											= true
+L["peoplepigflyhigh"]									= true
 L["An addon that help you queue for battlefield by play sound and \nnot to miss the eligibility to join/leave battlefield battle anymore."] = true
