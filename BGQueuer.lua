@@ -52,7 +52,7 @@ function BGQueuer:OnInitialize()
 		dialogInline  = true,
 		args = {
 			global_addon_enable = {
-				name = L["eanble"],
+				name = L["enable"],
 				type = "toggle",
 				set = 	(function (info, val)
 							self.db.global.global_addon_enable.enabled = val;
