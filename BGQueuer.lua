@@ -21,7 +21,7 @@ Special thanks to everyone in WOW Taiwan realm.
 
 ]]-- 
 
-local dbg = true;
+local dbg = false;
 local function dbgprint(str) if dbg then print(str) end end
 
 BGQueuer = LibStub("AceAddon-3.0"):NewAddon("BGQueuer", "AceEvent-3.0", "AceTimer-3.0", "AceConsole-3.0")
