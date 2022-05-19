@@ -6,7 +6,7 @@
 ## Notes: |cFFFF00001.Play battleground READY-CHECK and BATTLE-BEGIN sound even in mute mode|n2.Auto Leave BG when finished|r
 ## Notes-zhTW: |cFFFF00001.在靜音模式下,仍可播放提示音效:團隊確認,角色確認,戰場開打,戰場結束|n2.戰場結束後自動離開|r
 ## Notes-zhCN: |cFFFF00001.在靜默模式下,仍可播放提示音效:团队确认,角色确认,战场开打,战场结束|n2.战场結束後自動離開|r
-## Description: An addon that help you queue for battlefield and \nnot to miss the eligibility to join battlefield battle anymore.
+## Description: An addon that helps you queue for battlefield and \nnot to miss the eligibility to join battlefield battle anymore.
 ## Description-zhTW: 這個UI能夠播放提示音，讓你不再錯過戰場開打與結束的瞬間
 ## Description-zhCN: 這个UI能够播放提示音，让你不再错过战场开打与结束的瞬间
 ## Version: 1.0.0
