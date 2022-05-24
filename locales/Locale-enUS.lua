@@ -21,3 +21,7 @@ L["Author"]												= true
 L["Version"]											= true
 L["peoplepigflyhigh"]									= true
 L["An addon that help you queue for battlefield by play sound and \nnot to miss the eligibility to join/leave battlefield battle anymore."] = true
+L["Auto Role Confirmation"]                             = true
+L["Delay time to auto role confirmation"]               = true
+L["Tank/healer/dps role"]                               = true
+L["Confirm Role"]                                       = true
