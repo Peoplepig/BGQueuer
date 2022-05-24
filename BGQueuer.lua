@@ -104,7 +104,7 @@ function BGQueuer:OnInitialize()
 					auto_role_confirmation = {
 						type = "toggle",
 						name = L["Auto Role Confirmation"],
-						desc = L["Tank/healer/dps role"],
+						desc = L["Tank/Healer/Dps role"],
 						set = function(info, val) self.db.char.auto_role_confirmation.enabled = val end,
 						get = function(info) return self.db.char.auto_role_confirmation.enabled end,
 						order = 13,
@@ -122,7 +122,7 @@ function BGQueuer:OnInitialize()
 					},
 					role_check_popup = {
 						name = L["Confirm Role"],
-						desc = L["Tank/healer/dps role"],
+						desc = L["Tank/Healer/Dps role"],
 						type = "execute",
 						func = function() StaticPopupSpecial_Show(LFDRoleCheckPopup) end,
 						order = 15,
