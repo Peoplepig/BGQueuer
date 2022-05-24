@@ -40,6 +40,9 @@ function BGQueuer:OnInitialize()
 			auto_leave_battlefield 		= {	enabled = true,	delay = 0,},
 			auto_release 				= {	enabled = true,	},
 			play_sound_on_mute 			= {	enabled = true,	}
+		},
+		char = {
+			auto_role_confirmation		= { enabled = true, delay = 0 } ,
 		}
 	}
 
@@ -95,7 +98,35 @@ function BGQueuer:OnInitialize()
 						min = 0, max = 120, step = 1,
 						set = function(info, val) self.db.global.auto_leave_battlefield.delay = val end,
 						get = function(info) return self.db.global.auto_leave_battlefield.delay end,
+						order = 15,
+						width = 0.7
+					},
+					auto_role_confirmation = {
+						type = "toggle",
+						name = L["Auto Role Confirmation"],
+						desc = L["Tank/healer/dps role"],
+						set = function(info, val) self.db.char.auto_role_confirmation.enabled = val end,
+						get = function(info) return self.db.char.auto_role_confirmation.enabled end,
 						order = 16,
+						width = 1.5,
+					},
+					auto_role_confirmation_delay = {
+						type = "range",
+						name = L["delay time"],
+						desc = L["Delay time to auto role confirmation"],
+						min = 0, max = 12, step = 1,
+						set = function(info, val) self.db.char.auto_role_confirmation.delay = val end,
+						get = function(info) return self.db.char.auto_role_confirmation.delay end,
+						order = 16,
+						width = 0.7
+					},
+					role_check_popup = {
+						name = L["Confirm Role"],
+						desc = L["Tank/healer/dps role"],
+						type = "execute",
+						func = function() StaticPopupSpecial_Show(LFDRoleCheckPopup) end,
+						order = 16,
+						width = 0.7,
 					},
 					auto_release = {
 						type = "toggle",
@@ -104,7 +135,7 @@ function BGQueuer:OnInitialize()
 						get = function(info) return self.db.global.auto_release.enabled end,
 						width = "full",
 						order = 17,
-					},
+					}
 				}
 			},
 			subgroupSoundOption = {
@@ -273,6 +304,10 @@ function BGQueuer:LFG_ROLE_CHECK_SHOW()
 	dbgprint("LFG_ROLE_CHECK_SHOW()")
 	if self.db.global.role_check_notification.enabled then
 		self:SondAlert()
+	end
+
+	if self.db.char.auto_role_confirmation.enabled then
+		C_Timer.After(self.db.char.auto_role_confirmation.delay, function() CompleteLFGRoleCheck(true) end)
 	end
 end
 
