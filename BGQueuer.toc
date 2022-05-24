@@ -1,5 +1,7 @@
 ## Interface: 90200
 ## Title: BGQueuer
+## Title-zhTW: BGQueuer |cFF0099FF[戰場排隊助手]|r
+## Title-zhCN: BGQueuer |cFF0099FF[战场排队助手]]|r
 ## Author: Peoplepig
 ## Author-zhTW: Peoplepig
 ## Author-zhCN: Peoplepig
