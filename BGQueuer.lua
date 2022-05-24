@@ -88,7 +88,7 @@ function BGQueuer:OnInitialize()
 						desc = L["Leave and play sound"],
 						set = function(info, val) self.db.global.auto_leave_battlefield.enabled = val end,
 						get = function(info) return self.db.global.auto_leave_battlefield.enabled end,
-						order = 15,
+						order = 11,
 						width = 1.5
 					},
 					delay = {
@@ -98,7 +98,7 @@ function BGQueuer:OnInitialize()
 						min = 0, max = 120, step = 1,
 						set = function(info, val) self.db.global.auto_leave_battlefield.delay = val end,
 						get = function(info) return self.db.global.auto_leave_battlefield.delay end,
-						order = 15,
+						order = 12,
 						width = 0.7
 					},
 					auto_role_confirmation = {
@@ -107,7 +107,7 @@ function BGQueuer:OnInitialize()
 						desc = L["Tank/healer/dps role"],
 						set = function(info, val) self.db.char.auto_role_confirmation.enabled = val end,
 						get = function(info) return self.db.char.auto_role_confirmation.enabled end,
-						order = 16,
+						order = 13,
 						width = 1.5,
 					},
 					auto_role_confirmation_delay = {
@@ -117,7 +117,7 @@ function BGQueuer:OnInitialize()
 						min = 0, max = 12, step = 1,
 						set = function(info, val) self.db.char.auto_role_confirmation.delay = val end,
 						get = function(info) return self.db.char.auto_role_confirmation.delay end,
-						order = 16,
+						order = 14,
 						width = 0.7
 					},
 					role_check_popup = {
@@ -125,7 +125,7 @@ function BGQueuer:OnInitialize()
 						desc = L["Tank/healer/dps role"],
 						type = "execute",
 						func = function() StaticPopupSpecial_Show(LFDRoleCheckPopup) end,
-						order = 16,
+						order = 15,
 						width = 0.7,
 					},
 					auto_release = {
@@ -134,7 +134,7 @@ function BGQueuer:OnInitialize()
 						set = function(info, val) self.db.global.auto_release.enabled = val end,
 						get = function(info) return self.db.global.auto_release.enabled end,
 						width = "full",
-						order = 17,
+						order = 16,
 					}
 				}
 			},
