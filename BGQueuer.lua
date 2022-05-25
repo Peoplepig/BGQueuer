@@ -63,7 +63,7 @@ function BGQueuer:OnInitialize()
 							if val then self:OnEnable() else self:OnDisable() end
 						end),
 				get = 	(function (info)
-				    		val = self.db.global.global_addon_enable.enabled;
+							local val = self.db.global.global_addon_enable.enabled;
 				    		if val then self:OnEnable() else self:OnDisable() end
 				    		return val 
 						end),
