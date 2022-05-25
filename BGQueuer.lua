@@ -38,7 +38,7 @@ function BGQueuer:OnInitialize()
 			proposal_show_notification 	= {	enabled = true,	},
 			battle_begin_notification 	= {	enabled = true,	},
 			auto_leave_battlefield 		= {	enabled = true,	delay = 0,},
-			auto_release 				= {	enabled = false, },
+			auto_release 				= {	enabled = true,	},
 			play_sound_on_mute 			= {	enabled = true,	}
 		},
 		char = {
