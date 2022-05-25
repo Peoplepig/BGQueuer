@@ -25,3 +25,5 @@ L["Auto Role Confirmation"]                             = true
 L["Delay time to auto role confirmation"]               = true
 L["Tank/Healer/Dps role"]                               = true
 L["Confirm Role"]                                       = true
+L["Only in Battleground"]                               = true
+L["Only release spirit in Battleground"]                = true
