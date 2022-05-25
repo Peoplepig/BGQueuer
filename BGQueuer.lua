@@ -63,7 +63,7 @@ function BGQueuer:OnInitialize()
 							if val then self:OnEnable() else self:OnDisable() end
 						end),
 				get = 	(function (info)
-				    		val = self.db.global.global_addon_enable.enabled;
+							local val = self.db.global.global_addon_enable.enabled;
 				    		if val then self:OnEnable() else self:OnDisable() end
 				    		return val 
 						end),
@@ -130,13 +130,21 @@ function BGQueuer:OnInitialize()
 					auto_release = {
 						type = "toggle",
 						name = L["Auto Release when player was died"],
-						set = function(info, val) self.db.global.auto_release.enabled = val end,
-						get = function(info) return self.db.global.auto_release.enabled end,
+						set = (function(info, val)
+									self.db.global.auto_release.enabled = val
+									self.options.args.subgroupMajorOption.args.auto_release_only_in_bg.disabled = not val
+								end),
+						get = (function(info)
+									local val = self.db.global.auto_release.enabled
+									self.options.args.subgroupMajorOption.args.auto_release_only_in_bg.disabled = not val
+									return val
+								end),
 						width = 1.5,
 						order = 16,
 					},
 					auto_release_only_in_bg = {
 						type = "toggle",
+						disabled = true,
 						name = L["Only in Battleground"],
 						desc = L["Only release spirit in Battleground"],
 						set = function(info, val) self.db.global.auto_release.only_in_bg = val end,
