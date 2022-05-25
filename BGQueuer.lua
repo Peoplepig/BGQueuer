@@ -22,6 +22,7 @@ Special thanks to everyone in WOW Taiwan realm.
 ]]-- 
 
 local dbg = false;
+local G_PartyLeader = nil;
 local function dbgprint(str) if dbg then print(str) end end
 
 BGQueuer = LibStub("AceAddon-3.0"):NewAddon("BGQueuer", "AceEvent-3.0", "AceTimer-3.0", "AceConsole-3.0")
@@ -38,7 +39,7 @@ function BGQueuer:OnInitialize()
 			proposal_show_notification 	= {	enabled = true,	},
 			battle_begin_notification 	= {	enabled = true,	},
 			auto_leave_battlefield 		= {	enabled = true,	delay = 0,},
-			auto_release 				= {	enabled = true,	},
+			auto_release 				= {	enabled = false, },
 			play_sound_on_mute 			= {	enabled = true,	}
 		},
 		char = {
@@ -270,8 +271,11 @@ function BGQueuer:OnEnable()
 	self:RegisterEvent("UPDATE_BATTLEFIELD_STATUS");
 	self:RegisterEvent("PET_BATTLE_QUEUE_PROPOSE_MATCH");
 	self:RegisterEvent("LFG_ROLE_CHECK_SHOW");
+	self:RegisterEvent("LFG_ROLE_CHECK_ROLE_CHOSEN");
+	self:RegisterEvent("LFG_ROLE_CHECK_HIDE");
 	self:RegisterEvent("START_TIMER");
-	self:RegisterEvent("PLAYER_DEAD")
+	self:RegisterEvent("PLAYER_DEAD");
+	self:RegisterEvent("PARTY_LEADER_CHANGED");
 end
 
 function BGQueuer:OnDisable()
@@ -300,6 +304,7 @@ function BGQueuer:READY_CHECK()
 	end
 end
 
+local IsRoleChecked = true;
 function BGQueuer:LFG_ROLE_CHECK_SHOW()
 	dbgprint("LFG_ROLE_CHECK_SHOW()")
 	if self.db.global.role_check_notification.enabled then
@@ -307,8 +312,27 @@ function BGQueuer:LFG_ROLE_CHECK_SHOW()
 	end
 
 	if self.db.char.auto_role_confirmation.enabled then
-		C_Timer.After(self.db.char.auto_role_confirmation.delay, function() CompleteLFGRoleCheck(true) end)
+		if not IsRoleChecked then
+			C_Timer.After(self.db.char.auto_role_confirmation.delay, function() CompleteLFGRoleCheck(true) end)
+			IsRoleChecked = true
+		end
 	end
+end
+
+function BGQueuer:LFG_ROLE_CHECK_ROLE_CHOSEN(self, event, ...)
+	dbgprint("LFG_ROLE_CHECK_ROLE_CHOSEN()")
+	local char_name = ...
+
+	local isLeader_ = isLeader(char_name)
+	if isLeader_ then
+		IsRoleChecked = false;
+		dbgprint(char_name .. "is leader")
+	end
+end
+
+function BGQueuer:LFG_ROLE_CHECK_HIDE()
+	dbgprint("LFG_ROLE_CHECK_HIDE()")
+	IsRoleChecked = true;
 end
 
 function BGQueuer:PLAYER_DEAD()
@@ -358,6 +382,12 @@ function BGQueuer:UPDATE_BATTLEFIELD_STATUS()
 	end
 end
 
+function BGQueuer:PARTY_LEADER_CHANGED()
+	dbgprint("PARTY_LEADER_CHANGED")
+	G_PartyLeader = getLeaderName()
+	dbgprint("Leader: " .. G_PartyLeader)
+end
+
 -- utils --
 function BGQueuer:SondAlert()
 	local channel = self.db.global.play_sound_on_mute.enabled and "Master" or nil
@@ -369,4 +399,18 @@ function BGQueuer:ProposolSoundAlert() -- bg role or confirm
 	PlaySound(67788, channel)
 	PlaySound(31756, channel)
 	C_Timer.After(0.2, (function() PlaySound(10338, channel) end))
+end
+
+function getLeaderName()
+	local name, rank
+	local i
+	for i = 1, MAX_RAID_MEMBERS do
+		name, rank = GetRaidRosterInfo(i)
+		if rank == 2 then break	end
+	end
+	return name
+end
+
+function isLeader(name)
+	return G_PartyLeader == name and true or false	
 end
