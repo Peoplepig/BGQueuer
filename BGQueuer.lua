@@ -22,6 +22,7 @@ Special thanks to everyone in WOW Taiwan realm.
 ]]-- 
 
 local dbg = false;
+local G_PartyLeader = nil;
 local function dbgprint(str) if dbg then print(str) end end
 
 BGQueuer = LibStub("AceAddon-3.0"):NewAddon("BGQueuer", "AceEvent-3.0", "AceTimer-3.0", "AceConsole-3.0")
@@ -39,11 +40,9 @@ function BGQueuer:OnInitialize()
 			battle_begin_notification 	= {	enabled = true,	},
 			auto_leave_battlefield 		= {	enabled = true,	delay = 0,},
 			auto_release 				= {	enabled = false, only_in_bg = true},
-			play_sound_on_mute 			= {	enabled = true,	}
+			play_sound_on_mute 			= {	enabled = true,	},
+			auto_role_confirmation		= { enabled = true, delay = 0 },
 		},
-		char = {
-			auto_role_confirmation		= { enabled = true, delay = 0 } ,
-		}
 	}
 
 	self.db = LibStub("AceDB-3.0"):New("BGQueuerDB", self.defaults, true)
@@ -105,8 +104,8 @@ function BGQueuer:OnInitialize()
 						type = "toggle",
 						name = L["Auto Role Confirmation"],
 						desc = L["Tank/Healer/Dps role"],
-						set = function(info, val) self.db.char.auto_role_confirmation.enabled = val end,
-						get = function(info) return self.db.char.auto_role_confirmation.enabled end,
+						set = function(info, val) self.db.global.auto_role_confirmation.enabled = val end,
+						get = function(info) return self.db.global.auto_role_confirmation.enabled end,
 						order = 13,
 						width = 1.5,
 					},
@@ -115,8 +114,8 @@ function BGQueuer:OnInitialize()
 						name = L["delay time"],
 						desc = L["Delay time to auto role confirmation"],
 						min = 0, max = 12, step = 1,
-						set = function(info, val) self.db.char.auto_role_confirmation.delay = val end,
-						get = function(info) return self.db.char.auto_role_confirmation.delay end,
+						set = function(info, val) self.db.global.auto_role_confirmation.delay = val end,
+						get = function(info) return self.db.global.auto_role_confirmation.delay end,
 						order = 14,
 						width = 0.7
 					},
@@ -278,8 +277,11 @@ function BGQueuer:OnEnable()
 	self:RegisterEvent("UPDATE_BATTLEFIELD_STATUS");
 	self:RegisterEvent("PET_BATTLE_QUEUE_PROPOSE_MATCH");
 	self:RegisterEvent("LFG_ROLE_CHECK_SHOW");
+	self:RegisterEvent("LFG_ROLE_CHECK_ROLE_CHOSEN");
+	self:RegisterEvent("LFG_ROLE_CHECK_HIDE");
 	self:RegisterEvent("START_TIMER");
-	self:RegisterEvent("PLAYER_DEAD")
+	self:RegisterEvent("PLAYER_DEAD");
+	self:RegisterEvent("PARTY_LEADER_CHANGED");
 end
 
 function BGQueuer:OnDisable()
@@ -308,15 +310,35 @@ function BGQueuer:READY_CHECK()
 	end
 end
 
+local IsRoleChecked = true;
 function BGQueuer:LFG_ROLE_CHECK_SHOW()
 	dbgprint("LFG_ROLE_CHECK_SHOW()")
 	if self.db.global.role_check_notification.enabled then
 		self:SondAlert()
 	end
 
-	if self.db.char.auto_role_confirmation.enabled then
-		C_Timer.After(self.db.char.auto_role_confirmation.delay, function() CompleteLFGRoleCheck(true) end)
+	if self.db.global.auto_role_confirmation.enabled then
+		if not IsRoleChecked then
+			C_Timer.After(self.db.global.auto_role_confirmation.delay, function() CompleteLFGRoleCheck(true) end)
+			IsRoleChecked = true
+		end
 	end
+end
+
+function BGQueuer:LFG_ROLE_CHECK_ROLE_CHOSEN(self, event, ...)
+	dbgprint("LFG_ROLE_CHECK_ROLE_CHOSEN()")
+	local char_name = ...
+
+	local isLeader_ = isLeader(char_name)
+	if isLeader_ then
+		IsRoleChecked = false;
+		dbgprint(char_name .. "is leader")
+	end
+end
+
+function BGQueuer:LFG_ROLE_CHECK_HIDE()
+	dbgprint("LFG_ROLE_CHECK_HIDE()")
+	IsRoleChecked = true;
 end
 
 function BGQueuer:PLAYER_DEAD()
@@ -371,6 +393,12 @@ function BGQueuer:UPDATE_BATTLEFIELD_STATUS()
 	end
 end
 
+function BGQueuer:PARTY_LEADER_CHANGED()
+	dbgprint("PARTY_LEADER_CHANGED")
+	G_PartyLeader = getLeaderName()
+	dbgprint("Leader: " .. G_PartyLeader)
+end
+
 -- utils --
 function BGQueuer:SondAlert()
 	local channel = self.db.global.play_sound_on_mute.enabled and "Master" or nil
@@ -382,4 +410,18 @@ function BGQueuer:ProposolSoundAlert() -- bg role or confirm
 	PlaySound(67788, channel)
 	PlaySound(31756, channel)
 	C_Timer.After(0.2, (function() PlaySound(10338, channel) end))
+end
+
+function getLeaderName()
+	local name, rank
+	local i
+	for i = 1, MAX_RAID_MEMBERS do
+		name, rank = GetRaidRosterInfo(i)
+		if rank == 2 then break	end
+	end
+	return name
+end
+
+function isLeader(name)
+	return G_PartyLeader == name and true or false	
 end
