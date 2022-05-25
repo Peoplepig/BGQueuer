@@ -50,7 +50,7 @@ function BGQueuer:OnInitialize()
 	dbgprint("db created")
 
 	self.options = {
-		name = 'BGQueuer',
+		name = L["BGQueuer"],
 		type = "group",
 		dialogInline  = true,
 		args = {
@@ -261,7 +261,7 @@ function BGQueuer:OnInitialize()
 	}
 
 	LibStub("AceConfig-3.0"):RegisterOptionsTable("BGQueuer", self.options)
-	local interfaceFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions('BGQueuer',"BGQueuer")
+	local interfaceFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("BGQueuer",L["BGQueuer"])
 end
 
 function BGQueuer:OnEnable()
