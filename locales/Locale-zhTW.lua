@@ -3,7 +3,7 @@ if not L then return end
 L["Play sound when a leader initiated a ready check"] 	= "團隊確認 提示音"
 L["Play sound even in mute mode"] 						= "靜音模式下，仍強制播放提示音"
 L["Play sound when a leader initiated a role check"] 	= "角色確認 提示音"
-L["Play sound when you are eligible to enter battle"] 	= "戰場開打 提示音"
+L["Play sound when you are eligible to enter battle"] 	= "戰場進入 提示音"
 L["enable"]												= "啟用"
 L["Major option"]										= "主選項"
 L["Play sound when battle countdown almost ends"]		= "開打倒數 提示音"
