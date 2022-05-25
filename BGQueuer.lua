@@ -64,6 +64,8 @@ function BGQueuer:OnInitialize()
 						end),
 				get = 	(function (info)
 							local val = self.db.global.global_addon_enable.enabled;
+							self.options.args.subgroupMajorOption.disabled = not val;
+							self.options.args.subgroupSoundOption.disabled = not val;
 				    		if val then self:OnEnable() else self:OnDisable() end
 				    		return val 
 						end),
