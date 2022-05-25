@@ -38,7 +38,7 @@ function BGQueuer:OnInitialize()
 			proposal_show_notification 	= {	enabled = true,	},
 			battle_begin_notification 	= {	enabled = true,	},
 			auto_leave_battlefield 		= {	enabled = true,	delay = 0,},
-			auto_release 				= {	enabled = false, },
+			auto_release 				= {	enabled = false, only_in_bg = true},
 			play_sound_on_mute 			= {	enabled = true,	}
 		},
 		char = {
@@ -133,8 +133,16 @@ function BGQueuer:OnInitialize()
 						name = L["Auto Release when player was died"],
 						set = function(info, val) self.db.global.auto_release.enabled = val end,
 						get = function(info) return self.db.global.auto_release.enabled end,
-						width = "full",
+						width = 1.5,
 						order = 16,
+					},
+					auto_release_only_in_bg = {
+						type = "toggle",
+						name = L["Only in Battleground"],
+						desc = L["Only release spirit in Battleground"],
+						set = function(info, val) self.db.global.auto_release.only_in_bg = val end,
+						get = function(info) return self.db.global.auto_release.only_in_bg end,
+						order = 17,
 					}
 				}
 			},
@@ -313,6 +321,11 @@ end
 
 function BGQueuer:PLAYER_DEAD()
 	if self.db.global.auto_release.enabled then
+		if self.db.global.auto_release.only_in_bg then
+			if UnitInBattleground("player") == nil then
+				return
+			end
+		end
 		RepopMe()
 	end
 end
