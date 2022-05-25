@@ -26,5 +26,5 @@ L["Delay time to auto role confirmation"]               = "延迟几秒后才自
 L["Tank/Healer/Dps role"]                               = "坦/奶/dd"
 L["Confirm Role"]                                       = "选择角色"
 L["Only in Battleground"]                               = "只在战场中"
-L["Only release spirit in Battleground"]                = "只在战场中放魂"
+L["Only release spirit in Battleground"]                = "战场中才自动放魂"
 L["BGQueuer"]                                           = "战场排队助手"
