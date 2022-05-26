@@ -11,7 +11,7 @@
 ## Description: An addon that helps you queue for battlefield and \nnot to miss the eligibility to join battlefield battle anymore.
 ## Description-zhTW: 這個UI能夠播放提示音，讓你不再錯過戰場開打與結束的瞬間
 ## Description-zhCN: 這个UI能够播放提示音，让你不再错过战场开打与结束的瞬间
-## Version: 1.1.1
+## Version: 1.1.2
 ## OptionalDeps: Ace3, LibStub, AceGUI-3.0_SFX-Widgets
 ## SavedVariables: BGQueuerDB
 ## X-Email: peoplepigflyhigh@gmail.com
