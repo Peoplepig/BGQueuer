@@ -335,12 +335,11 @@ function BGQueuer:LFG_ROLE_CHECK_SHOW()
 	end
 end
 
-function BGQueuer:LFG_ROLE_CHECK_ROLE_CHOSEN(self, event, ...)
+function BGQueuer:LFG_ROLE_CHECK_ROLE_CHOSEN(eventName, ...)
 	dbgprint("LFG_ROLE_CHECK_ROLE_CHOSEN()")
 	local char_name = ...
 
-	local isLeader_ = isLeader(char_name)
-	if isLeader_ then
+	if isLeader(char_name) then
 		IsRoleChecked = false;
 		dbgprint(char_name .. "is leader")
 	end
