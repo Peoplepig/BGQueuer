@@ -401,7 +401,7 @@ end
 function BGQueuer:PARTY_LEADER_CHANGED()
 	dbgprint("PARTY_LEADER_CHANGED")
 	G_PartyLeader = getLeaderName()
-	dbgprint("Leader: " .. G_PartyLeader)
+	dbgprint("Leader: " .. (G_PartyLeader or "nil"))
 end
 
 -- utils --
