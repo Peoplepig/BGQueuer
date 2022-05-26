@@ -131,7 +131,7 @@ function BGQueuer:OnInitialize()
 					},
 					auto_release = {
 						type = "toggle",
-						name = L["Auto Release when player was died"],
+						name = L["Auto Release when player was dead"],
 						set = (function(info, val)
 									self.db.global.auto_release.enabled = val
 									self.options.args.subgroupMajorOption.args.auto_release_only_in_bg.disabled = not val
