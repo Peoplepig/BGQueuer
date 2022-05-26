@@ -433,5 +433,11 @@ function getLeaderName()
 end
 
 function isLeader(name)
+	if G_PartyLeader == nil then
+		G_PartyLeader = getLeaderName()
+	end
+
+	dbgprint("isLeader checked: " .. G_PartyLeader .. ", " .. name)
+
 	return G_PartyLeader == name and true or false	
 end
