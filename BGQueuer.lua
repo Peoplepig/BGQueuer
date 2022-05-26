@@ -335,12 +335,11 @@ function BGQueuer:LFG_ROLE_CHECK_SHOW()
 	end
 end
 
-function BGQueuer:LFG_ROLE_CHECK_ROLE_CHOSEN(self, event, ...)
+function BGQueuer:LFG_ROLE_CHECK_ROLE_CHOSEN(eventName, ...)
 	dbgprint("LFG_ROLE_CHECK_ROLE_CHOSEN()")
 	local char_name = ...
 
-	local isLeader_ = isLeader(char_name)
-	if isLeader_ then
+	if isLeader(char_name) then
 		IsRoleChecked = false;
 		dbgprint(char_name .. "is leader")
 	end
@@ -368,12 +367,8 @@ function BGQueuer:BgTimerHandler()
 	end
 end
 
-function BGQueuer:START_TIMER(self, event, ...)
+function BGQueuer:START_TIMER(eventName, ...)
 	local timerType, timeRemaining, totalTime = ...;
-	
-	if (nil == totalTime) then
-		timeRemaining = timerType
-	end
 
 	dbgprint("timer triggered! after n seconds" .. timeRemaining)
 	C_Timer.After(timeRemaining - 5, BGQueuer.BgTimerHandler)
@@ -433,5 +428,11 @@ function getLeaderName()
 end
 
 function isLeader(name)
+	if G_PartyLeader == nil then
+		G_PartyLeader = getLeaderName()
+	end
+
+	dbgprint("isLeader checked: " .. G_PartyLeader .. ", " .. name)
+
 	return G_PartyLeader == name and true or false	
 end
