@@ -368,12 +368,8 @@ function BGQueuer:BgTimerHandler()
 	end
 end
 
-function BGQueuer:START_TIMER(self, event, ...)
+function BGQueuer:START_TIMER(eventName, ...)
 	local timerType, timeRemaining, totalTime = ...;
-	
-	if (nil == totalTime) then
-		timeRemaining = timerType
-	end
 
 	dbgprint("timer triggered! after n seconds" .. timeRemaining)
 	C_Timer.After(timeRemaining - 5, BGQueuer.BgTimerHandler)
